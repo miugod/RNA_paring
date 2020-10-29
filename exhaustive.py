@@ -2,10 +2,15 @@ import numpy as np
 
 
 def exhaustive(conn_permit, start_seq=None, start_index=0):
-    """
-    :param conn_permit:
-    :param start_seq:(np.ndarray) if exh from half, use this seq
-    :param start_index: if exh from half, start from this index
+    """穷举法解 DNA 配对问题
+
+    Args:
+        conn_permit: list, 连接允许数组.
+        start_seq: np.ndarray, 若半路穷举, 则在此 seq 基础上进行. 必须和 conn 等长.
+        start_index: int, if exh from half, start from this index
+    Returns:
+        ans: int, 最大连接数的值.
+        ans_seq: np.ndarray, 达到最大连接的序列.
     """
     n = len(conn_permit)
     if start_seq is None:
@@ -43,6 +48,7 @@ def exhaustive(conn_permit, start_seq=None, start_index=0):
 
 
 def check_if_legal(seq):
+    """检查一个 seq 是否合法"""
     n = len(seq)
     legal = [True if seq[i] == -1 else False for i in range(n)]
     for i in range(n):

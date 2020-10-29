@@ -80,8 +80,8 @@ def val_once(n, s, logger, count_str='', only_test_time=False):
             correct = False
             logger.warning('-' * 10)
             logger.warning('[{}] 验证结果错误！'.format(count_str))
-            logger.warning('exh结果为 {}, dp结果为 {}, dpnew结果为 {}.'.format(ans_1, ans_2))
-            logger.warning('exh连接序列为 {}, dp为 {},dpnew结果为 {}.'.format(ans_seq_1, ans_seq_2))
+            logger.warning('exh结果为 {}, dp结果为 {}.'.format(ans_1, ans_2))
+            logger.warning('exh连接序列为 {}, dp为 {}.'.format(ans_seq_1, ans_seq_2))
             logger.warning('conn_permit 为 {}'.format(conn))
             logger.warning('-' * 10)
         else:
