@@ -1,6 +1,6 @@
 import timeit
 from dna_generator import generate_single_chain
-from dp import dp_solver as dp_solver
+from dp import dp_interval_s_solver as dp_solver
 from dp import dp_new_solver as dp_new
 from exhaustive import exhaustive
 from unit_test import get_units
