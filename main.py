@@ -19,8 +19,8 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(40, 7, 50000, logger, False)
-    # val_epoch(30, 7, 50, logger, False)
+    # val_epoch(40, 7, 50000, logger, False)
+    val_epoch(30, 7, 50, logger, False)
 
 
 def val_epoch(n, s, rounds, logger, only_test_time=False):
