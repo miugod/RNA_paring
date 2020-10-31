@@ -21,16 +21,38 @@ def exhaustive(conn_permit, start_seq=None, start_index=0):
     ans = sum(start_seq > -1)  # note max answer
     ans_seq = start_seq  # note which connects which
 
-    def dfs(begin, seq):
-        if begin == n:  # if dfs to the deepest
-            nonlocal ans, ans_seq
-            ans_cur = sum(seq > -1)
+    def dfs(begin, seq, cur_ans):
+        """穷举递归.
+        
+        Args:
+            begin: int, 递归开始位.
+            seq: np.ndarray, 至此为止的配对序列.
+            cur_ans: int, 当前的配对点数. 等于 sum(seq > -1).
+        """
+        nonlocal ans, ans_seq
+
+        # if dfs to the deepest
+        if begin == n:
+            # ans_cur = sum(seq > -1)  # 旧法
+            ans_cur = cur_ans
             if ans_cur > ans and check_if_legal(seq):
                 ans, ans_seq = ans_cur, seq
             return
 
-        if seq[begin] > -1:  # if already connected
-            dfs(begin + 1, seq)
+        # if already connected
+        if seq[begin] > -1:
+            dfs(begin + 1, seq, cur_ans)
+            return
+        
+        # 剪枝: 若递归至此绝无可能超过最优解则剪枝
+        prob_max_conn_num = 0  # 之后可能的最多连接数
+        for i in range(begin, n):
+            if seq[i] == -1 and conn_permit[i] and conn_permit[i][-1] >= begin:
+                for j in list(filter(lambda x: begin<=x<len(seq), conn_permit[i])):
+                    if seq[j] == -1:
+                        prob_max_conn_num += 1
+                        break
+        if cur_ans + prob_max_conn_num <= ans:
             return
 
         # exhaustive
@@ -39,11 +61,11 @@ def exhaustive(conn_permit, start_seq=None, start_index=0):
                 continue
             tmp = seq.copy()
             tmp[begin], tmp[i] = i, begin
-            dfs(begin + 1, tmp)
+            dfs(begin + 1, tmp, cur_ans + 2)
             del tmp
-        dfs(begin + 1, seq.copy())  # 这行在 for 前会导致求得的解的熵很高, 及先连后面再连前面
+        dfs(begin + 1, seq.copy(), cur_ans)  # 这行在 for 前会导致求得的解的熵很高, 即先连后面再连前面
 
-    dfs(start_index, start_seq)  # dfs(0, np.array([-1 for _ in range(n)])) if not from_half
+    dfs(start_index, start_seq, sum(start_seq > -1))
     return ans, ans_seq
 
 
