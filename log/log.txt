@@ -1,3 +1,38 @@
-2020-10-29 11:21:57,033 RNA_Connect_Alg INFO: Validation begin.
-2020-10-29 11:21:57,034 RNA_Connect_Alg INFO: ----------
-2020-10-29 11:21:57,034 RNA_Connect_Alg INFO: Validation: n=30, s=7, rounds=10000
+2020-10-31 08:30:32,485 RNA_Connect_Alg INFO: Validation begin.
+2020-10-31 08:30:32,486 RNA_Connect_Alg INFO: ----------
+2020-10-31 08:30:32,487 RNA_Connect_Alg INFO: Validation: n=50, s=7, rounds=3000
+2020-10-31 08:35:42,288 RNA_Connect_Alg DEBUG: [1/3000] 正确. Result=28. Time=307952/1798ms.
+2020-10-31 08:37:08,160 RNA_Connect_Alg DEBUG: [2/3000] 正确. Result=30. Time=80317/5553ms.
+2020-10-31 08:38:14,096 RNA_Connect_Alg DEBUG: [3/3000] 正确. Result=24. Time=63416/2518ms.
+2020-10-31 08:45:07,845 RNA_Connect_Alg DEBUG: [4/3000] 正确. Result=22. Time=409235/4512ms.
+2020-10-31 08:46:26,280 RNA_Connect_Alg DEBUG: [5/3000] 正确. Result=28. Time=76972/1462ms.
+2020-10-31 08:47:01,445 RNA_Connect_Alg DEBUG: [6/3000] 正确. Result=26. Time=34101/1062ms.
+2020-10-31 08:47:41,324 RNA_Connect_Alg DEBUG: [7/3000] 正确. Result=22. Time=38789/1089ms.
+2020-10-31 08:47:42,784 RNA_Connect_Alg DEBUG: [8/3000] 正确. Result=20. Time=638/820ms.
+2020-10-31 11:00:25,173 RNA_Connect_Alg DEBUG: [9/3000] 正确. Result=34. Time=7956176/6212ms.
+2020-10-31 11:11:09,078 RNA_Connect_Alg DEBUG: [10/3000] 正确. Result=34. Time=639048/4854ms.
+2020-10-31 11:16:51,773 RNA_Connect_Alg DEBUG: [11/3000] 正确. Result=30. Time=336480/6215ms.
+2020-10-31 11:26:03,562 RNA_Connect_Alg DEBUG: [12/3000] 正确. Result=32. Time=548093/3694ms.
+2020-10-31 11:27:34,670 RNA_Connect_Alg DEBUG: [13/3000] 正确. Result=26. Time=87186/3920ms.
+2020-10-31 11:27:40,767 RNA_Connect_Alg DEBUG: [14/3000] 正确. Result=26. Time=5450/647ms.
+2020-10-31 11:28:04,041 RNA_Connect_Alg DEBUG: [15/3000] 正确. Result=28. Time=21634/1638ms.
+2020-10-31 11:29:43,368 RNA_Connect_Alg DEBUG: [16/3000] 正确. Result=28. Time=97946/1379ms.
+2020-10-31 11:29:45,421 RNA_Connect_Alg DEBUG: [17/3000] 正确. Result=20. Time=1536/517ms.
+2020-10-31 11:30:04,351 RNA_Connect_Alg DEBUG: [18/3000] 正确. Result=20. Time=16301/2627ms.
+2020-10-31 11:42:23,249 RNA_Connect_Alg DEBUG: [19/3000] 正确. Result=32. Time=736444/2453ms.
+2020-10-31 11:43:45,060 RNA_Connect_Alg DEBUG: [20/3000] 正确. Result=24. Time=80533/1277ms.
+2020-10-31 12:54:24,835 RNA_Connect_Alg DEBUG: [21/3000] 正确. Result=32. Time=4236428/3345ms.
+2020-10-31 12:54:25,951 RNA_Connect_Alg DEBUG: [22/3000] 正确. Result=20. Time=512/602ms.
+2020-10-31 12:54:26,607 RNA_Connect_Alg DEBUG: [23/3000] 正确. Result=20. Time=178/477ms.
+2020-10-31 15:19:13,337 RNA_Connect_Alg DEBUG: [24/3000] 正确. Result=32. Time=8683795/4128ms.
+2020-10-31 15:19:54,817 RNA_Connect_Alg DEBUG: [25/3000] 正确. Result=28. Time=40333/1145ms.
+2020-10-31 15:24:40,407 RNA_Connect_Alg DEBUG: [26/3000] 正确. Result=28. Time=284408/1180ms.
+2020-10-31 15:26:23,283 RNA_Connect_Alg DEBUG: [27/3000] 正确. Result=26. Time=102038/836ms.
+2020-10-31 15:52:07,244 RNA_Connect_Alg DEBUG: [28/3000] 正确. Result=30. Time=1540812/3147ms.
+2020-10-31 15:52:09,893 RNA_Connect_Alg DEBUG: [29/3000] 正确. Result=18. Time=1038/1609ms.
+2020-10-31 20:29:06,955 RNA_Connect_Alg DEBUG: [30/3000] 正确. Result=32. Time=16610291/6769ms.
+2020-10-31 20:31:10,981 RNA_Connect_Alg DEBUG: [31/3000] 正确. Result=24. Time=121526/2498ms.
+2020-10-31 21:46:30,223 RNA_Connect_Alg DEBUG: [32/3000] 正确. Result=32. Time=4514829/4411ms.
+2020-10-31 21:57:19,314 RNA_Connect_Alg DEBUG: [33/3000] 正确. Result=26. Time=639738/9352ms.
+2020-10-31 21:57:23,442 RNA_Connect_Alg DEBUG: [34/3000] 正确. Result=26. Time=3486/640ms.
+2020-10-31 21:57:30,197 RNA_Connect_Alg DEBUG: [35/3000] 正确. Result=16. Time=3876/2878ms.

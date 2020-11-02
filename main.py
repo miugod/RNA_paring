@@ -19,7 +19,7 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(30, 7, 10000, logger, False)
+    val_epoch(50, 7, 3000, logger, False)
     # val_epoch(10, 6, 10, logger, False)
 
 
@@ -86,7 +86,7 @@ def val_once(n, s, logger, count_str='', only_test_time=False):
             logger.warning('-' * 10)
         else:
             correct = True
-            #logger.debug('[{}] 正确. Result={}. Time={}/{}/{}ms.'.format(count_str, ans_1, time_cost_1, time_cost_2))
+            logger.debug('[{}] 正确. Result={}. Time={}/{}ms.'.format(count_str, ans_1, time_cost_1, time_cost_2))
     else:
         logger.debug('[{}] Time={}ms.'.format(count_str, time_cost_2))
 
