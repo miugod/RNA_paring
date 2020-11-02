@@ -93,7 +93,12 @@ def dp_new_solver(conn, s):
 
 
 def dp_interval_s_solver(conn, s):
-    """f(i, j) = f(i, k) + f(k+s, j) + o(k-s, k+2s)"""
+    """f(i, j) = f(i, k) + f(k+s, j) + exh(k-s, k+2s)
+    
+    Args:
+        conn: list, conn_permit, 连接允许数组.
+        s: int.
+    """
     dp = {}
 
     def f(i, j):
@@ -113,7 +118,8 @@ def dp_interval_s_solver(conn, s):
             ans, ans_seq = exhaustive(
                 conn_,
                 start_seq=np.array([-1 for _ in range(j)]),
-                start_index=i
+                start_index=i,
+                back_connect=True
             )
             dp[(i, j)] = (ans, ans_seq[i:j])
             return dp[(i, j)]
@@ -121,26 +127,37 @@ def dp_interval_s_solver(conn, s):
         # do dp
         for k in range(i+1, j-s):
             left, right = f(i, k), f(k+s, j)
-            concat = np.concatenate(([-1 for _ in range(i)], left[1], [-1 for _ in range(s)], right[1]), axis=0).astype(np.int32)
+            concat = np.concatenate((
+                [-1 for _ in range(i)], 
+                left[1], 
+                [-1 for _ in range(s)], 
+                right[1]), axis=0).astype(np.int32)
             limit_left, limit_right = max(i, k-s), min(j, k+s+s)  # 定义穷举左右界限, 准备穷举
-            solution = (left[0] + right[0], concat)
+            # solution = (left[0] + right[0], concat)
 
-            def dfs(status, begin, score):
-                """使用 dfs 方式进行穷举.
+            # exh(limit_left, limit_right)
+            '''
+            def dfs(begin, status, score):
+                """使用 dfs 方式进行穷举, 可回看.
                 
                 Args:
                     status: np.ndarray, 当前配对 seq.
                     begin: 深搜开始位.
                     score: 到此为止的最优值.
                 """
+                # if dfs to the deepest
                 if begin == limit_right:
                     nonlocal solution
                     if score > solution[0] and check_if_legal(status):
                         solution = (score, status)
                     return
+
+                # if already connected
                 if status[begin] > -1:
-                    dfs(status, begin+1, score)
+                    dfs(begin+1, status, score)
                     return
+
+                # exhaustive
                 for connect in conn[begin]:
                     if connect < limit_left or connect >= limit_right:  # 超出2s范围不穷举
                         continue
@@ -148,11 +165,18 @@ def dp_interval_s_solver(conn, s):
                         continue
                     tmp = status.copy()
                     tmp[begin], tmp[connect] = connect, begin
-                    dfs(tmp, begin+1, score+2)
+                    dfs(begin+1, tmp, score+2)
                     del tmp
-                dfs(status, begin+1, score)
+                dfs(begin+1, status, score)
 
-            dfs(concat, i, solution[0])
+            # dfs(i, concat, solution[0])
+            '''
+            solution = exhaustive(
+                conn[:j], 
+                start_seq=concat[:j], 
+                start_index=limit_left,
+                end_index=limit_right,
+                back_connect=False)
             if dp[(i, j)][0] < solution[0]:
                 dp[(i, j)] = (solution[0], solution[1][i:j])
         return dp[(i, j)]
@@ -161,9 +185,8 @@ def dp_interval_s_solver(conn, s):
 
 
 if __name__ == '__main__':
-    # conn = [[], [5, 8, 9], [4, 7, 8, 9], [8], [2, 7, 12], [1, 11], [], [2, 4, 13, 14], [1, 2, 3, 12, 13], [1, 2, 12], [17], [5, 16], [4, 8, 9, 15], [7, 8], [7, 22], [12, 21], [11, 20], [10], [], [], [16], [15], [14], []]
-    conn = [[], [], [], [], [], [], [], [], [16], [15], [14], [13], [20], [11, 19], [10, 17], [9, 16], [8, 15], [14], [], [13], [12], [], [], []]  # result=10
-    s = 8
+    conn = [[5, 6], [4, 5], [4, 6], [5, 6], [1, 2, 5], [0, 1, 3, 4, 12], [0, 2, 3, 11], [10], [9], [8], [7, 16], [6, 15], [5], [], [], [11, 22], [10, 21], [], [], [], [27], [16, 26], [15], [], [], [], [21], [20], [], []]
+    s = 7
     res = dp_new_solver(conn, s)
     print(res)
     res = dp_interval_s_solver(conn, s)

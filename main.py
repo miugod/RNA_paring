@@ -1,6 +1,6 @@
 import timeit
 from dna_generator import generate_single_chain
-from dp import dp_interval_s_solver as dp_solver
+from dp import dp_interval_s_solver as dp_solver  # 更改solver只需在此
 from dp import dp_new_solver as dp_new
 from exhaustive import exhaustive
 from unit_test import get_units
@@ -19,12 +19,20 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(30, 7, 10000, logger, False)
-    # val_epoch(10, 6, 10, logger, False)
+    # val_epoch(40, 7, 50000, logger, False)
+    val_epoch(30, 7, 50, logger, False)
 
 
 def val_epoch(n, s, rounds, logger, only_test_time=False):
-    """根据给定 n, s 验证 rounds 次结果正确性."""
+    """根据给定 n, s 验证 rounds 次结果正确性.
+    
+    Args:
+        n: int, 链长度.
+        s: int, 节点可连接最远距离.
+        rounds: int, 验证轮数.
+        logger: 输出器.
+        only_test_time: bool, True - 只测 dp 法时间, 不测对错.
+    """
     logger.info('Validation: n={}, s={}, rounds={}'.format(n, s, rounds))
 
     if only_test_time:
@@ -53,7 +61,15 @@ def val_epoch(n, s, rounds, logger, only_test_time=False):
 
 
 def val_once(n, s, logger, count_str='', only_test_time=False):
-    """根据给定 n, s 验证一次 穷举法 vs DP法."""
+    """根据给定 n, s 验证一次 穷举法 vs DP法.
+    
+    Args:
+        n: int.
+        s: int.
+        logger:
+        count_str: str, 计数字符串, 形如 1/50.
+        only_test_time: bool.
+    """
     conn = generate_single_chain(n, s)
 
     # exhaustive
@@ -86,7 +102,7 @@ def val_once(n, s, logger, count_str='', only_test_time=False):
             logger.warning('-' * 10)
         else:
             correct = True
-            #logger.debug('[{}] 正确. Result={}. Time={}/{}/{}ms.'.format(count_str, ans_1, time_cost_1, time_cost_2))
+            logger.debug('[{}] 正确. Result={}. Time={}/{}ms.'.format(count_str, ans_1, time_cost_1, time_cost_2))
     else:
         logger.debug('[{}] Time={}ms.'.format(count_str, time_cost_2))
 
