@@ -1,56 +1,81 @@
 import numpy as np
 
 
-def exhaustive(conn_permit, start_seq=None, start_index=0):
-    """穷举法解 DNA 配对问题
+def exhaustive(conn_permit, start_seq=None, start_index=0, end_index=None, back_connect=True):
+    """穷举法解 DNA 配对问题,.
 
     Args:
         conn_permit: list, 连接允许数组.
         start_seq: np.ndarray, 若半路穷举, 则在此 seq 基础上进行. 必须和 conn 等长.
         start_index: int, if exh from half, start from this index
+        end_index: int, 停止穷举位置.
+        back_connect: bool, 是否回连. 非半路穷举此值无效.
     Returns:
         ans: int, 最大连接数的值.
         ans_seq: np.ndarray, 达到最大连接的序列.
     """
     n = len(conn_permit)
+    end_index = end_index or n
     if start_seq is None:
-        from_half = False  # exhaustive from half
+        back_connect = False  # 不回连
         start_seq = np.array([-1 for _ in range(n)])
-    else:
-        from_half = True
     ans = sum(start_seq > -1)  # note max answer
     ans_seq = start_seq  # note which connects which
 
-    def dfs(begin, seq):
-        if begin == n:  # if dfs to the deepest
-            nonlocal ans, ans_seq
-            ans_cur = sum(seq > -1)
+    def dfs(begin, seq, cur_ans):
+        """穷举递归, 不回看.
+        
+        Args:
+            begin: int, 递归开始位.
+            seq: np.ndarray, 至此为止的配对序列.
+            cur_ans: int, 当前的配对点数. 等于 sum(seq > -1).
+        """
+        nonlocal ans, ans_seq
+
+        # if dfs to the deepest
+        if begin == end_index:
+            # ans_cur = sum(seq > -1)  # 旧法
+            ans_cur = cur_ans
             if ans_cur > ans and check_if_legal(seq):
                 ans, ans_seq = ans_cur, seq
             return
 
-        if seq[begin] > -1:  # if already connected
-            dfs(begin + 1, seq)
+        # if already connected
+        if seq[begin] > -1:
+            dfs(begin + 1, seq, cur_ans)
+            return
+        
+        # 剪枝: 若递归至此绝无可能超过最优解则剪枝''
+        prob_max_conn_num = 0  # 之后可能的最多连接数
+        for i in range(begin, end_index):
+            if seq[i] == -1 and conn_permit[i] and conn_permit[i][-1] >= begin:
+                for j in list(filter(lambda x: begin<=x<end_index, conn_permit[i])):
+                    if seq[j] == -1:
+                        prob_max_conn_num += 1
+                        break
+        if cur_ans + prob_max_conn_num <= ans:
             return
 
         # exhaustive
         for i in conn_permit[begin]:
-            if i >= n or seq[i] > -1 or i <= begin and not from_half:  # 全穷举不回测
+            if i >= end_index or seq[i] > -1:  # 穷举不能超过止位, 有连接不连
+                continue
+            if i <= begin and not back_connect:
                 continue
             tmp = seq.copy()
             tmp[begin], tmp[i] = i, begin
-            dfs(begin + 1, tmp)
+            dfs(begin + 1, tmp, cur_ans + 2)
             del tmp
-        dfs(begin + 1, seq.copy())  # 这行在 for 前会导致求得的解的熵很高, 及先连后面再连前面
+        dfs(begin + 1, seq.copy(), cur_ans)  # 这行在 for 前会导致求得的解的熵很高, 即先连后面再连前面
 
-    dfs(start_index, start_seq)  # dfs(0, np.array([-1 for _ in range(n)])) if not from_half
+    dfs(start_index, start_seq, sum(start_seq > -1))
     return ans, ans_seq
 
 
 def check_if_legal(seq):
     """检查一个 seq 是否合法"""
     n = len(seq)
-    legal = [True if seq[i] == -1 else False for i in range(n)]
+    legal = [seq[i] == -1 for i in range(n)]
     for i in range(n):
         if legal[i]:
             continue

@@ -151,4 +151,5 @@ crashlytics-build.properties
 fabric.properties
 
 ######################
-log.txt
+.vscode
+log*.txt
