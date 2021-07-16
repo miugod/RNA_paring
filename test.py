@@ -19,7 +19,7 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(50, 7, 10, logger, False)
+    val_epoch(50, 8, 500, logger, False)
     # val_epoch(10, 6, 10, logger, False)
 
 
@@ -39,7 +39,10 @@ def val_epoch(n, s, rounds, logger, only_test_time=False):
         correct = 0
         exh_timer, dpnew_timer = AverageMeter(), AverageMeter()
         for i in range(rounds):
-            val_once(n, s, logger, '{}/{}'.format(i+1, rounds))
+            cost1, cost3, if_correct = val_once(n, s, logger, '{}/{}'.format(i+1, rounds))
+            exh_timer.update(cost1)
+            dpnew_timer.update(cost3)
+            correct += 1 if if_correct else 0
 
         logger.info('DP 结果验证 正确数/全部数: {}/{}'.format(correct, rounds))
         logger.info('穷举法 平均损耗时间 {}ms, 最小/最大损耗时间 {}/{}ms.'.format(exh_timer.avg, exh_timer.min, exh_timer.max))
@@ -55,10 +58,10 @@ def val_once(n, s, logger, count_str='', only_test_time=False):
 
     # exhaustive
     if not only_test_time:
-        #begin = timeit.default_timer()
-        ans_1 = 0
-        #end = timeit.default_timer()
-        #time_cost_1 = int((end - begin) * 1000)
+        begin = timeit.default_timer()
+        ans_1, ans_seq_1 = exhaustive(conn)
+        end = timeit.default_timer()
+        time_cost_1 = int((end - begin) * 1000)
 
     # dp
     #begin2 = timeit.default_timer()
@@ -77,14 +80,21 @@ def val_once(n, s, logger, count_str='', only_test_time=False):
         if ans_1 != ans_3:
             correct = False
             logger.warning('-' * 10)
-            logger.warning('dpnew结果为 {}.'.format(ans_3))
+            logger.warning('[{}] 验证结果错误！'.format(count_str))
+            logger.warning('exh结果为 {}, dpnew结果为 {}.'.format(ans_1, ans_3))
+            logger.warning('exh连接序列为 {}, dpnew结果为 {}.'.format(ans_seq_1, ans_seq_3))
             logger.warning('conn_permit 为 {}'.format(conn))
+            logger.warning('-' * 10)
+        else:
+            correct = True
+            logger.debug('[{}] 正确. Result={}. Time={}/{}ms.'.format(count_str, ans_1, time_cost_1, time_cost_3))
+            logger.debug('conn_permit 为 {}'.format(conn))
     else:
         logger.debug('[{}] Time={}ms.'.format(count_str, time_cost_3))
 
     if only_test_time:
         return time_cost_3
-    return time_cost_3, correct
+    return time_cost_1, time_cost_3, correct
 
 
 def unit_test():
