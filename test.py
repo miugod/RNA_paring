@@ -19,7 +19,7 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(50, 8, 500, logger, False)
+    val_epoch(50, 8, 5000, logger, False)
     # val_epoch(10, 6, 10, logger, False)
 
 
