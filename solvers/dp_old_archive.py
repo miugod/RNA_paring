@@ -1,5 +1,5 @@
 import numpy as np
-from exhaustive import exhaustive, check_if_legal
+from solvers.exhaustive import exhaustive, check_if_legal
 
 
 def dp_solver(conn, s):
