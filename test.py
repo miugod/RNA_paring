@@ -1,8 +1,9 @@
-import timeit
-from concurrent.futures import ThreadPoolExecutor
 from dna_generator import generate_single_chain
+from multiprocessing import Lock, Pool
+import numpy as np
 from solvers import Solver2sThreading as Solver
 from solvers.exhaustive import exhaustive
+import timeit
 from threading import Lock
 from unit_test import get_units
 from utils.average_meter import AverageMeter
@@ -23,34 +24,40 @@ def main():
     # for n, s in n_s_list:
     #     val_epoch(n, s, rounds, logger)
 
-    val_epoch(50, 10, 10, logger, False)
+    val_epoch(50, 10, 10000, logger, False)
     # val_epoch(10, 6, 10, logger, False)
 
 
 def val_epoch(n, s, rounds, logger, only_test_time=False):
     """根据给定 n, s 验证 rounds 次结果正确性."""
     logger.info("Validation: n={}, s={}, rounds={}".format(n, s, rounds))
-    threadpool = ThreadPoolExecutor(50)  # 最多同时算50个
-    threads = []
+    pool = Pool(processes=44)  # 最多同时算50个
+    processes = []
 
     if only_test_time:
         dp_timer = AverageMeter()
         for i in range(rounds):
             # cost = val_once(n, s, logger, "{}/{}".format(i + 1, rounds), only_test_time)
             # dp_timer.update(cost)
-            threads.append(
-                threadpool.submit(
+            processes.append(
+                pool.apply_async(
                     val_once,
-                    n,
-                    s,
-                    logger,
-                    "{}/{}".format(i + 1, rounds),
-                    only_test_time,
+                    (
+                        n,
+                        s,
+                        logger,
+                        "{}/{}".format(i + 1, rounds),
+                        only_test_time,
+                        np.random.RandomState(),
+                    ),
                 )
             )
-        for t in threads:
-            cost = t.result()
+        for p in processes:
+            cost = p.get()
             dp_timer.update(cost)
+        pool.close()
+        pool.join()
+
         logger.info(
             "DP法 平均损耗时间 {}ms, 最小/最大损耗时间 {}/{}ms.".format(
                 dp_timer.avg, dp_timer.min, dp_timer.max
@@ -68,14 +75,26 @@ def val_epoch(n, s, rounds, logger, only_test_time=False):
             # exh_timer.update(cost1)
             # dpnew_timer.update(cost3)
             # correct += 1 if if_correct else 0
-            threads.append(
-                threadpool.submit(val_once, n, s, logger, "{}/{}".format(i + 1, rounds))
+            processes.append(
+                pool.apply_async(
+                    val_once,
+                    (
+                        n,
+                        s,
+                        logger,
+                        "{}/{}".format(i + 1, rounds),
+                        False,
+                        np.random.RandomState(),
+                    ),
+                )
             )
-        for t in threads:
-            cost1, cost3, if_correct = t.result()
+        for p in processes:
+            cost1, cost3, if_correct = p.get()
             exh_timer.update(cost1)
             dpnew_timer.update(cost3)
             correct += 1 if if_correct else 0
+        pool.close()
+        pool.join()
 
         logger.info("DP 结果验证 正确数/全部数: {}/{}".format(correct, rounds))
         logger.info(
@@ -93,9 +112,9 @@ def val_epoch(n, s, rounds, logger, only_test_time=False):
         logger.info("-" * 10)
 
 
-def val_once(n, s, logger, count_str="", only_test_time=False):
+def val_once(n, s, logger, count_str="", only_test_time=False, random_engine=None):
     """根据给定 n, s 验证一次 穷举法 vs DP法."""
-    conn = generate_single_chain(n, s)
+    conn = generate_single_chain(n, s, random_engine)
 
     # exhaustive
     if not only_test_time:
@@ -142,11 +161,11 @@ def val_once(n, s, logger, count_str="", only_test_time=False):
     return time_cost_1, time_cost_3, correct
 
 
-def unit_test():
-    units = get_units()
-    for conn, ans in units:
-        res = dp_solver(conn, 10)
-        print(res[0] == ans, res)
+# def unit_test():
+#     units = get_units()
+#     for conn, ans in units:
+#         res = dp_solver(conn, 10)
+#         print(res[0] == ans, res)
 
 
 if __name__ == "__main__":
