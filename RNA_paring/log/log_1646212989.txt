@@ -1,0 +1,3 @@
+2022-03-02 17:23:09,456 RNA_Connect_Alg INFO: Validation begin.
+2022-03-02 17:23:09,457 RNA_Connect_Alg INFO: ----------
+2022-03-02 17:23:09,457 RNA_Connect_Alg INFO: Validation: n=55, s=10, rounds=100

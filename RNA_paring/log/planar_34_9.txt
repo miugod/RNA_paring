@@ -1,0 +1,8 @@
+2022-02-25 09:44:22,024 RNA_Connect_Alg INFO: Validation begin.
+2022-02-25 09:44:22,025 RNA_Connect_Alg INFO: ----------
+2022-02-25 09:44:22,025 RNA_Connect_Alg INFO: Validation: n=34, s=9, rounds=10000
+2022-02-25 19:39:18,966 RNA_Connect_Alg INFO: DP 结果验证 正确数/全部数: 10000/10000
+2022-02-25 19:39:19,094 RNA_Connect_Alg INFO: 穷举法 平均损耗时间 14281.1205ms, 最小/最大损耗时间 117/377510ms.
+2022-02-25 19:39:19,095 RNA_Connect_Alg INFO: DPnew法 平均损耗时间 14244.8447ms, 最小/最大损耗时间 116/362874ms.
+2022-02-25 19:39:19,096 RNA_Connect_Alg INFO: End validation epoch.
+2022-02-25 19:39:19,097 RNA_Connect_Alg INFO: ----------
